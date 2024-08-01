@@ -1,6 +1,8 @@
 <?php
 include 'db_config.php';  // Incluir archivo de configuración de la base de datos
 
+header('Content-Type: application/json');
+
 // Obtener datos del POST
 $email = isset($_POST['email']) ? $conn->real_escape_string($_POST['email']) : '';
 $contrasena = isset($_POST['contrasena']) ? $conn->real_escape_string($_POST['contrasena']) : '';
@@ -14,15 +16,24 @@ if (!empty($email) && !empty($contrasena)) {
     if ($result->num_rows > 0) {
         $row = $result->fetch_assoc();
         if (password_verify($contrasena, $row['contrasena'])) {
-            echo "Login exitoso";
+            $userName = $row['nombre']; // Supongamos que el nombre está en el campo 'nombre'
+
+            // Preparar y enviar la respuesta JSON
+            echo json_encode(array(
+                "message" => "Login exitoso",
+                "userName" => $userName
+            ));
         } else {
-            echo "Contraseña incorrecta";
+            // Contraseña incorrecta
+            echo json_encode(array("message" => "Contraseña incorrecta"));
         }
     } else {
-        echo "Email no registrado";
+        // Email no registrado
+        echo json_encode(array("message" => "Email no registrado"));
     }
 } else {
-    echo "Todos los campos son requeridos";
+    // Campos vacíos
+    echo json_encode(array("message" => "Todos los campos son requeridos"));
 }
 
 $conn->close();

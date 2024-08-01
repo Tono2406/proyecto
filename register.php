@@ -1,24 +1,6 @@
 <?php
 include 'db_config.php';  // Incluir archivo de configuración de la base de datos
 
-// Función para verificar y crear la tabla si no existe
-function createTableIfNotExists($conn) {
-    $createTableSql = "CREATE TABLE IF NOT EXISTS usuarios (
-        id INT AUTO_INCREMENT PRIMARY KEY,
-        nombre VARCHAR(255) NOT NULL UNIQUE,
-        email VARCHAR(255) NOT NULL UNIQUE,
-        contrasena VARCHAR(255) NOT NULL
-    )";
-
-    if ($conn->query($createTableSql) === FALSE) {
-        echo "Error al crear la tabla: " . $conn->error;
-        exit;
-    }
-}
-
-// Llamar a la función para verificar y crear la tabla si es necesario
-createTableIfNotExists($conn);
-
 // Obtener datos del POST
 $nombre = isset($_POST['nombre']) ? $conn->real_escape_string($_POST['nombre']) : '';
 $email = isset($_POST['email']) ? $conn->real_escape_string($_POST['email']) : '';
